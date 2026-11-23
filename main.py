@@ -136,6 +136,26 @@ def calculate_cgpa(student):
 # 3. ELIGIBILITY                                             OWNER: Jordan
 # =============================================================================
 
+#Checks if the course code exists in the first place
+#Returns Boolean
+def check_course_exists(course_code: str, catalogue: dict)-> bool:
+    return course_code in catalogue
+
+#Loops through all the students courses taken and checks if the prerequisites for the course code are met
+#Returns Boolean
+def check_prerequisites_met(student: Student, course_code: str, catalogue: dict) -> bool:
+    required_prereqs = catalogue[course_code]["prereqs"]
+    for req in required_prereqs:
+        if req not in student.subjects_taken:
+            return False
+    return True
+
+#Checks if the student has already taken the course
+def not_already_taken(student: Student, course_code: str) -> bool:
+    if course_code not in student.subjects_taken:
+        return True
+    return False
+
 def eligibility_rules(student):
     """Build the list of predicates a course must satisfy for this student.
 
