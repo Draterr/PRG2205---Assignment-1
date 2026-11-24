@@ -156,29 +156,19 @@ def not_already_taken(student: Student, course_code: str) -> bool:
         return True
     return False
 
-def eligibility_rules(student):
-    """Build the list of predicates a course must satisfy for this student.
+#Since each function outputs a boolean we can combine all of them into a single rule list, but since each
+#of them require a different set of parameters, we use lambda functions to pass the specific parameters needed    
+def eligibility_rules(student: Student, course_code: str, catalogue: dict) -> list:
+    return [
+        lambda code: check_course_exists(code, catalogue),
+        lambda code: check_prerequisites_met(student, code, catalogue),
+        lambda code: not_already_taken(student, code)
+    ]
 
-    MECHANISM 3: CREATING AND USING A LIST OF FUNCTIONS
-    The enrolment policy becomes a value the program holds, so adding a
-    condition means appending one factory rather than editing a chain of ifs.
-    TODO Jordan: explain how and why.
-
-    Returns a list of functions, each (course_code) -> bool.
-    """
-    raise NotImplementedError
-
-
-def is_eligible(course_code, rules):
-    """Return True if the course satisfies every rule.
-
-    MECHANISM 4: PASSING FUNCTIONS AS ARGUMENTS
-    Contains no policy of its own, only knows how to apply predicates, so the
-    ruleset can change without touching this function.
-    TODO Jordan: explain how and why. Mention all() short circuiting.
-    """
-    raise NotImplementedError
-
+#This is the main function that uses the eligibility rules to check if a student is eligible for a course   
+def is_eligible(student: Student, course_code: str, catalogue: dict)-> bool:
+    rules = eligibility_rules(student, course_code, catalogue)
+    return all(rule(course_code) for rule in rules)
 
 # =============================================================================
 # 4. RULE FACTORIES                                          OWNER: Jordan
