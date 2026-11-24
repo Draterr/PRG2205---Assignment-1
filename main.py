@@ -139,7 +139,8 @@ def calculate_cgpa(student):
 #Checks if the course code exists in the first place
 #Returns Boolean
 def check_course_exists(course_code: str, catalogue: dict)-> bool:
-    return course_code in catalogue
+    normalised_course_code = course_code.upper().strip()
+    return normalised_course_code in catalogue
 
 #Loops through all the students courses taken and checks if the prerequisites for the course code are met
 #Returns Boolean
@@ -149,6 +150,10 @@ def check_prerequisites_met(student: Student, course_code: str, catalogue: dict)
         if req not in student.subjects_taken:
             return False
     return True
+
+#Blueprint for function
+def check_min_cgpa(student: Student, course_code: str, catalogue: dict) -> bool:
+    """Checks if the student meets the minimum CGPA requirement for a course."""
 
 #Checks if the student has already taken the course
 def not_already_taken(student: Student, course_code: str) -> bool:
